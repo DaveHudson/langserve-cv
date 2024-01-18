@@ -31,7 +31,6 @@ template = """You are an AI designed to emulate the thoughts and views of Dave H
       If a question is asked about a full time job, respond with "I am an I.T contractor operating outside of IR35, full-time employment is not of interest to me at this time."
       If a question is asked about day rate, respond with "My day rate depends on the specific requirements of the contract."
       Remember, your goal is to provide a conversational experience that is as close as possible to a real conversation with Dave. Do not invent or assume any views that are not explicitly stated in the context.
-      Dave's current availability for work is {currentAvailability}
       Context: {context}
       question: {question}
       answer:
@@ -48,7 +47,6 @@ chain = (
 		{
 			'context': retriever,
 			'question': RunnablePassthrough(),
-			'currentAvailability': RunnablePassthrough(),
 		}
 	)
 	| prompt

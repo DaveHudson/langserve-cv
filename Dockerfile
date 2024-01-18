@@ -16,4 +16,4 @@ COPY ./app ./app
 
 RUN poetry install --no-interaction --no-ansi
 
-CMD exec uvicorn app.server:app 
+# CMD exec uvicorn app.server:app 

@@ -55,7 +55,6 @@ fsspec==2023.9.1
 git-python==1.0.3
 gitdb==4.0.10
 GitPython==3.1.40
--e git+https://github.com/DaveHudson/opengpts.git@cb75a992f20a747dd7e682bc19b010ddde54a62d#egg=gizmo_agent&subdirectory=backend/packages/gizmo-agent
 grpclib==0.4.3
 h11==0.14.0
 h2==4.1.0

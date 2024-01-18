@@ -20,8 +20,8 @@ COPY ./app ./app
 
 RUN poetry install --no-interaction --no-ansi
 
-EXPOSE 80
+# EXPOSE 80
 
 # CMD exec uvicorn app.server:app --host 127.0.0.1 --port 8080
 
-CMD ["uvicorn", "app.server:app", "--host", "127.0.0.1", "--port", "80"]
+# CMD ["uvicorn", "app.server:app", "--host", "127.0.0.1", "--port", "80"]

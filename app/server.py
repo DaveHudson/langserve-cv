@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from langserve import add_routes
 
-from app.chain import chain as pinecone_cv_chain
+from app.aicv import chain as pinecone_cv_chain
 
 app = FastAPI()
 

@@ -21,6 +21,7 @@ tiktoken = "^0.5.2"
 openai = "^1.8.0"
 pinecone-client = "3.0.0"
 ruff = "^0.1.13"
+faiss-cpu = "^1.7.4"
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = ">=0.0.15"

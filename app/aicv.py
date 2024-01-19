@@ -37,7 +37,7 @@ languagesVectorstore = FAISS.from_texts(
 	],
 	embedding=OpenAIEmbeddings(),
 )
-languagesRetriever = vectorstore.as_retriever()
+languagesRetriever = languagesVectorstore.as_retriever()
 
 # RAG prompt
 template = """You are an AI designed to emulate the thoughts and views of Dave Hudson. Your responses should be in the first person, as if Dave himself is speaking. Use phrases like "In my view..." or "I believe...".

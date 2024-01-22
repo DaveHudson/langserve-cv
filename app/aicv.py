@@ -1,7 +1,11 @@
 import os
+from operator import itemgetter
+from typing import List, Union
 
 from dotenv import load_dotenv
+from langchain.pydantic_v1 import BaseModel, Field
 from langchain_community.vectorstores import FAISS, Pinecone
+from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
@@ -49,7 +53,7 @@ template = """You are an AI designed to emulate the thoughts and views of Dave H
 	Remember, your goal is to provide a conversational experience that is as close as possible to a real conversation with Dave. Do not invent or assume any views that are not explicitly stated in the context.
 	Context: {context}
 	question: {question}
-	currentAvailability: {currentAvailability} 
+	If the question asks about availability then your response should include {currentAvailability} 
 	answer:
 """
 prompt = ChatPromptTemplate.from_template(template)
@@ -57,17 +61,33 @@ prompt = ChatPromptTemplate.from_template(template)
 # LLM
 model = ChatOpenAI(temperature=0, model='gpt-4-1106-preview')
 
+
 # LCEL Chain
+class Input(BaseModel):
+	input: str = Field(
+		...,
+		extra={'widget': {'type': 'text'}},
+	)
+	chat_history: List[Union[HumanMessage, AIMessage]] = Field(
+		...,
+		extra={'widget': {'type': 'chat', 'input': 'location'}},
+	)
+
+
+class Output(BaseModel):
+	output: str
+
+
 chain = (
 	RunnableParallel(
 		{
-			'context': retriever,
-			'currentAvailability': availabilityRetriever,
-			'languages': languagesRetriever,
-			'question': RunnablePassthrough(),
+			'context': itemgetter('input') | retriever,
+			'currentAvailability': itemgetter('input') | availabilityRetriever,
+			'languages': itemgetter('input') | languagesRetriever,
+			'question': itemgetter('input') | RunnablePassthrough(),
 		}
 	)
 	| prompt
 	| model
 	| StrOutputParser()
-)
+).with_types(input_type=Input, output_type=Output)

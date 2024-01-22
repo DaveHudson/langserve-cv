@@ -32,20 +32,38 @@ async def api_key_auth(
 		)
 
 
+async def api_key_auth_if_not_local(
+	api_key: str = Security(api_key_header), host: str = Depends(get_host)
+):
+	if host != '127.0.0.1':
+		await api_key_auth(api_key)
+
+
 app = FastAPI()
 
 
-@app.get('/', dependencies=[Depends(api_key_auth)])
+@app.get('/', dependencies=[Depends(api_key_auth_if_not_local)])
 async def redirect_root_to_docs():
 	return RedirectResponse('/docs')
 
 
-add_routes(app, pinecone_cv_chain, path='/cv', dependencies=[Depends(api_key_auth)])
 add_routes(
-	app, pinecone_rolematch_chain, path='/match', dependencies=[Depends(api_key_auth)]
+	app,
+	pinecone_cv_chain,
+	path='/cv',
+	dependencies=[Depends(api_key_auth_if_not_local)],
 )
 add_routes(
-	app, pinecone_rolecover_chain, path='/cover', dependencies=[Depends(api_key_auth)]
+	app,
+	pinecone_rolematch_chain,
+	path='/match',
+	dependencies=[Depends(api_key_auth_if_not_local)],
+)
+add_routes(
+	app,
+	pinecone_rolecover_chain,
+	path='/cover',
+	dependencies=[Depends(api_key_auth_if_not_local)],
 )
 
 # if __name__ == '__main__':
